@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>ShowmeAI聊日报</title> 
+  <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(45deg, #0f0c29, #302b63);
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: white;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .player-container {
+            width: 90%;
+            max-width: 800px;
+            height: calc(100vh - 120px);
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        #visualizer {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        audio {
+            width: 100%;
+            filter: drop-shadow(0 0 5px cyan);
+        }
+
+        audio::-webkit-media-controls-panel {
+            background: rgba(0,0,0,0.5);
+        }
+    </style> 
+ </head> 
+ <body> 
+  <h1>ShowmeAI聊日报</h1> 
+  <div class="player-container"> 
+   <audio id="audioPlayer" controls src="https://cozebucket.oss-cn-beijing.aliyuncs.com/ttsmaker-file-2025-2-25-11-46-6.mp3"> 
+   </audio> 
+   <canvas id="visualizer"></canvas> 
+  </div> 
+  <script>
+        let audioContext;
+        let analyser;
+        let dataArray;
+        let animationId;
+
+        // 初始化音频分析
+        function initAudio() {
+            const audioElement = document.getElementById('audioPlayer');
+            
+            audioElement.addEventListener('play', () => {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    analyser = audioContext.createAnalyser();
+                    analyser.fftSize = 512;
+                    const source = audioContext.createMediaElementSource(audioElement);
+                    source.connect(analyser);
+                    analyser.connect(audioContext.destination);
+                    dataArray = new Uint8Array(analyser.frequencyBinCount);
+                }
+                
+                if (animationId) cancelAnimationFrame(animationId);
+                drawVisualizer();
+            });
+        }
+
+        // 可视化绘制
+        function drawVisualizer() {
+            const canvas = document.getElementById('visualizer');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+
+            analyser.getByteFrequencyData(dataArray);
+
+            // 清空画布
+            ctx.fillStyle = 'rgba(0,0,0,0.1)';
+            ctx.fillRect(0, 0, width, height);
+
+            // 动态频谱柱
+            const barWidth = (width / dataArray.length) * 2.5;
+            let x = 0;
+
+            for (let i = 0; i < dataArray.length; i++) {
+                const barHeight = (dataArray[i] / 255) * height;
+                const gradient = ctx.createLinearGradient(0, height, 0, height - barHeight);
+                gradient.addColorStop(0, '#00ffff');
+                gradient.addColorStop(1, '#ff00ff');
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, height - barHeight, barWidth, barHeight);
+                x += barWidth + 1;
+            }
+
+            animationId = requestAnimationFrame(drawVisualizer);
+        }
+
+        // 画布尺寸调整
+        function resizeCanvas() {
+            const canvas = document.getElementById('visualizer');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+
+        // 事件监听
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+        });
+
+        window.addEventListener('load', () => {
+            resizeCanvas();
+            initAudio();
+        });
+    </script> 
+ </body>
+</html>
