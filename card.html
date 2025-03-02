@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>AI知识卡片</title> 
+  <style>
+        .card {
+            width: 350px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            margin: 20px auto;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .card-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .card-body {
+            padding: 20px;
+            background-color: #fff;
+        }
+        .section {
+            margin-bottom: 15px;
+        }
+        .section h3 {
+            color: #6e8efb;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            font-size: 18px;
+        }
+        .section ul {
+            padding-left: 20px;
+        }
+        .section li {
+            margin-bottom: 5px;
+        }
+        .milestone {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        .year {
+            font-weight: bold;
+            min-width: 70px;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            font-style: italic;
+            color: #666;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <div class="card"> 
+   <div class="card-header"> 
+    <h2>人工智能基础概念</h2> 
+   </div> 
+   <div class="card-body"> 
+    <p>人工智能(AI)是计算机科学的一个分支，致力于创造能够模拟人类智能行为的系统。这一领域融合了多学科知识，包括计算机科学、数学、认知心理学和语言学等。</p> 
+    <div class="section"> 
+     <h3>核心概念</h3> 
+     <ul> 
+      <li><strong>机器学习</strong>：AI的一个子集，专注于开发能从数据中学习的算法，无需明确编程每个步骤</li> 
+      <li><strong>深度学习</strong>：机器学习的一个分支，使用多层神经网络处理复杂数据</li> 
+      <li><strong>自然语言处理</strong>：使计算机能够理解、解释和生成人类语言</li> 
+      <li><strong>计算机视觉</strong>：赋予计算机"看见"和理解视觉信息的能力</li> 
+     </ul> 
+    </div> 
+    <div class="section"> 
+     <h3>AI发展里程碑</h3> 
+     <div class="milestone">
+      <span class="year">1950年代</span> - 图灵测试提出
+     </div> 
+     <div class="milestone">
+      <span class="year">1997年</span> - IBM的Deep Blue击败国际象棋冠军
+     </div> 
+     <div class="milestone">
+      <span class="year">2011年</span> - IBM Watson在Jeopardy!游戏中获胜
+     </div> 
+     <div class="milestone">
+      <span class="year">2016年</span> - AlphaGo击败围棋世界冠军李世石
+     </div> 
+    </div> 
+    <div class="section"> 
+     <h3>应用领域</h3> 
+     <p>医疗诊断、自动驾驶、语音助手、推荐系统、金融分析、智能制造等</p> 
+    </div> 
+   </div> 
+   <div class="footer">
+     AI的未来挑战包括解决伦理问题、提高透明度、减少偏见，以及确保AI技术发展符合人类的长远利益。 
+   </div> 
+  </div> 
+ </body>
+</html>
