@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <title>课堂随机点名系统</title> 
+  <style>
+        /* 精简后的核心样式 */
+        body {
+            font-family: "华文楷体", sans-serif;
+            background: #f0fff3;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            border: 2px solid #2a593a;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        #result {
+            font-size: 2em;
+            color: #2a593a;
+            margin: 20px 0;
+            min-height: 60px;
+        }
+        button {
+            font-size: 1.2em;
+            padding: 12px 24px;
+            margin: 0 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 20px;
+        }
+        .name-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        .name-item {
+            padding: 6px 12px;
+            background: #e8f5e9;
+            border-radius: 12px;
+        }
+        .name-item.selected {
+            text-decoration: line-through;
+            background: #ffebee;
+            opacity: 0.7;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <div class="container"> 
+   <div id="result"></div> 
+   <div> <button id="startStop">开始/停止</button> <button id="reset">重置</button> 
+   </div> 
+   <div class="name-list" id="nameList"></div> 
+  </div> 
+  <script>
+        // 生成50个随机学生
+        const surnames = ['王','李','张','刘','陈','杨','黄','赵','周','吴'];
+        const givenNames = ['子轩','浩宇','欣怡','俊杰','雅雯','浩然','诗涵','博文','梓涵','一诺'];
+        const texts = ['《岳阳楼记》','《滕王阁序》','《赤壁赋》','《出师表》','《兰亭集序》'];
+        
+        // 系统状态
+        let isRunning = false;
+        let timer = null;
+        let currentName = null;
+
+        // 初始化名单
+        function initNames() {
+            const names = [];
+            while(names.length < 50) {
+                const name = surnames[Math.random()*surnames.length|0] + 
+                           givenNames[Math.random()*givenNames.length|0];
+                if(!names.includes(name)) names.push(name);
+            }
+            return names;
+        }
+
+        // 创建名单显示
+        function renderNames() {
+            const names = initNames();
+            document.getElementById('nameList').innerHTML = 
+                names.map(n => `<div class="name-item">${n}</div>`).join('');
+        }
+
+        // 核心逻辑
+        document.getElementById('startStop').onclick = () => {
+            if(isRunning) {
+                // 停止时标记最终选中
+                if(currentName) {
+                    document.querySelectorAll('.name-item').forEach(item => {
+                        if(item.textContent === currentName) {
+                            item.classList.add('selected');
+                        }
+                    });
+                }
+                isRunning = false;
+                clearInterval(timer);
+                this.textContent = "开始";
+            } else {
+                isRunning = true;
+                this.textContent = "停止";
+                timer = setInterval(() => {
+                    const available = [...document.querySelectorAll('.name-item:not(.selected)')];
+                    currentName = available.length ? 
+                        available[Math.random()*available.length|0].textContent : null;
+                    document.getElementById('result').textContent = 
+                        currentName ? `${currentName} 背诵 ${texts[Math.random()*texts.length|0]}` : "";
+                }, 100);
+            }
+        };
+
+        document.getElementById('reset').onclick = () => {
+            renderNames();
+            document.getElementById('result').textContent = "";
+            isRunning = false;
+            clearInterval(timer);
+            document.getElementById('startStop').textContent = "开始";
+        };
+
+        // 初始化
+        renderNames();
+    </script> 
+ </body>
+</html>
